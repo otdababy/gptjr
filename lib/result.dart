@@ -137,6 +137,8 @@ class _ResultPageState extends State<ResultPage> {
                                   final List<ContextMenuButtonItem> buttonItems =
                                       editableTextState.contextMenuButtonItems;
                                   final TextEditingValue value = _controller.value;
+                                  buttonItems.removeAt(1);
+                                  buttonItems.removeAt(0);
                                   buttonItems.insert(
                                     0,
                                     ContextMenuButtonItem(
