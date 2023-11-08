@@ -1,6 +1,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gptjr/widget/styledbutton.dart';
 import 'package:gptjr/widget/styledtext.dart';
 
@@ -21,6 +22,20 @@ class _ResultPageState extends State<ResultPage> {
 
   _ResultPageState(String result) {
     _result = result;
+  }
+
+  final TextEditingController _controller = TextEditingController(
+
+  );
+
+  void _showDialog(BuildContext context) {
+    Navigator.of(context).push(
+      DialogRoute<void>(
+        context: context,
+        builder: (BuildContext context) =>
+        const AlertDialog(title: Text('You clicked send email!')),
+      ),
+    );
   }
 
   @override
@@ -44,6 +59,9 @@ class _ResultPageState extends State<ResultPage> {
     final TextEditingController _controller = TextEditingController(
       text: "body blbalbalbababaaaaaaaa dhihihi",
     );
+    setState(() {
+      _controller.text = _result;
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -104,10 +122,46 @@ class _ResultPageState extends State<ResultPage> {
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Container(
-                            child: StyledText(
-                              text: _result,
-                              size: 15,
-                            )
+                            width: 600,
+                            child: SingleChildScrollView(
+                              child: TextField(
+                                controller: _controller,
+                                keyboardType: TextInputType.multiline,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  // fillColor: Colors.white,
+                                  filled: false,
+                                ),
+                                maxLines: null,
+                                contextMenuBuilder: (BuildContext context, EditableTextState editableTextState) {
+                                  final List<ContextMenuButtonItem> buttonItems =
+                                      editableTextState.contextMenuButtonItems;
+                                  final TextEditingValue value = _controller.value;
+                                  buttonItems.insert(
+                                    0,
+                                    ContextMenuButtonItem(
+                                      label: 'Show original text',
+                                      onPressed: () {
+                                        //call API for original text
+                                      },
+                                    ),
+                                  );
+                                  buttonItems.insert(
+                                    0,
+                                    ContextMenuButtonItem(
+                                      label: 'Show recommendation',
+                                      onPressed: () {
+                                        //call API for recommendation
+                                      },
+                                    ),
+                                  );
+                                  return AdaptiveTextSelectionToolbar.buttonItems(
+                                    anchors: editableTextState.contextMenuAnchors,
+                                    buttonItems: buttonItems,
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                         ),
                       ],

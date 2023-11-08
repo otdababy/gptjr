@@ -104,7 +104,8 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _nameField,
-              StyledButton(text: "Log In", width: 250, height: 60, press: (){login(_nameController.text);})
+              StyledButton(text: "Log In", width: 250, height: 60, press: (){
+                login(_nameController.text);})
             ],
           ),
         )

@@ -24,8 +24,6 @@ class _InputPageState extends State<InputPage> {
 
   void translate(String text){
     //send text, translate via gpt, get result, send it to result page
-
-
     Navigator.push(context, MaterialPageRoute(
         builder: (_) => ResultPage(text)));
   }
@@ -38,78 +36,80 @@ class _InputPageState extends State<InputPage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: StyledText(text: "GPT Jr",size: 20,),
-              ),
-            ],
+    return SafeArea(
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: StyledText(text: "GPT Jr",size: 20,),
+                ),
+              ],
+            ),
           ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(30.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey)
-                  ),
-                  child: Column(
-                    children: [
-                      //Textfield for translation
-                      Column(
-                        children: [
-                          Container(
-                            height: 500,
-                            child: Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: TextField(
-                                decoration: new InputDecoration(
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
+          body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.all(30.0),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey)
+                    ),
+                    child: Column(
+                      children: [
+                        //Textfield for translation
+                        Column(
+                          children: [
+                            Container(
+                              height: 600,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: TextField(
+                                  decoration: new InputDecoration(
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.white),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.white),
+                                    ),
+                                    hintText: 'Welcome to GPT Jr. $_name!\nEnter a text you want to translate',
                                   ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                  ),
-                                  hintText: 'Enter text to translate',
+                                  keyboardType: TextInputType.multiline,
+                                  maxLines: null,
                                 ),
-                                keyboardType: TextInputType.multiline,
-                                maxLines: null,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          // on press,
-                          // send text,
-                          // get result
-                          // navigate to resultpage with result
-                          StyledButton(text: "Translate", width: 200, height: 70, press: (){translate("Translated text...");})
-                        ],
-                      )
-                    ],
+                          ],
+                        ),
+                        Spacer(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            // on press,
+                            // send text,
+                            // get result
+                            // navigate to resultpage with result
+                            StyledButton(text: "Translate", width: 200, height: 70, press: (){translate("Translated\n\n\n\n\n\ndfasdfasfdadfafadfsd\nn\ndfasdfadsfafsa text...");})
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        )
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
+              ],
+            ),
+          )
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: _incrementCounter,
+        //   tooltip: 'Increment',
+        //   child: const Icon(Icons.add),
+        // ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
