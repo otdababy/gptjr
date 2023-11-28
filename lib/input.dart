@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:gptjr/api/get_translation_api.dart';
 import 'package:gptjr/result.dart';
 import 'package:gptjr/widget/styledbutton.dart';
 import 'widget/styledtext.dart';
@@ -22,11 +25,27 @@ class _InputPageState extends State<InputPage> {
     _name = name;
   }
 
-  void translate(String text){
-    //send text, translate via gpt, get result, send it to result page
-    Navigator.push(context, MaterialPageRoute(
-        builder: (_) => ResultPage(text)));
-  }
+  void handleTranslation(String text) async {
+      //GET request
+      try{
+        var a = await TranslationGetApi.getTranslation(_name, 1);
+        final body = json.decode(a.body.toString());
+        //result from GET
+        // final result = body['result'];
+        //Get 성공
+        print(body);
+        
+        Navigator.push(context, MaterialPageRoute(
+        builder: (_) => ResultPage(body, 1)));
+      }
+      catch(e) {
+        print('실패함');
+        print(e.toString());
+      }
+    }
+
+
+  final _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +89,7 @@ class _InputPageState extends State<InputPage> {
                               child: Padding(
                                 padding: const EdgeInsets.all(15.0),
                                 child: TextField(
+                                  controller: _controller,
                                   decoration: new InputDecoration(
                                     focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(color: Colors.white),
@@ -94,7 +114,7 @@ class _InputPageState extends State<InputPage> {
                             // send text,
                             // get result
                             // navigate to resultpage with result
-                            StyledButton(text: "Translate", width: 200, height: 70, press: (){translate("Translated\n\n\n\n\n\ndfasdfasfdadfafadfsd\nn\ndfasdfadsfafsa text...");})
+                            StyledButton(text: "Translate", width: 200, height: 70, press: (){handleTranslation(_controller.text);})
                           ],
                         )
                       ],
@@ -113,3 +133,4 @@ class _InputPageState extends State<InputPage> {
     );
   }
 }
+

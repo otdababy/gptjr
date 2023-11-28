@@ -22,8 +22,8 @@ class MyApp extends StatelessWidget {
         primaryColor: Color(0xFFFFFF),
       ),
       routes: {
-        '/input': (context) => LoginPage(),
-        '/result': (context) => ResultPage("Show result here..."),
+        // '/input': (context) => LoginPage(),
+        // '/result': (context) => ResultPage("Show result here..."),
       },
       home: LoginPage(),
     );
@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
   final _nameController = TextEditingController();
 
   void login(String name){
-    //send name and then push to main page
+    // send name and then push to main page
     Navigator.push(context, MaterialPageRoute(
       builder: (_) => InputPage(name)));
   }
@@ -77,8 +77,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 hintText: 'Name',
               ),
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
+              // keyboardType: TextInputType.multiline,
+              // maxLines: null,
             ),
           ),
         ),
