@@ -48,6 +48,7 @@ class _InputPageState extends State<InputPage> {
         // final result = body['result'];
         //Get 성공
         // print(body);
+        print(body);
         
         Navigator.push(context, MaterialPageRoute(
         builder: (_) => ResultPage(body, text, 1)));
@@ -94,14 +95,14 @@ class _InputPageState extends State<InputPage> {
             ),
           ),
           body: Padding(
-            padding: const EdgeInsets.all(50.0),
+            padding: const EdgeInsets.all(100.0),
             child:Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.all(15.0),
-                  child: Text("Tap the research paper you would like to translate $_name!", style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),),
+                  child: Text("Tap the research paper you would like to translate $_name!", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),),
                 ),
                 Container(height: 20,),
                 Padding(
@@ -114,7 +115,7 @@ class _InputPageState extends State<InputPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("1. \"Charlie and the Semi-Automated Factory: Data-Driven Operator Behavior and Performance Modeling for Human-Machine Collaborative Systems\"", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),),
+                          Text("1. \"Charlie and the Semi-Automated Factory: Data-Driven Operator Behavior and Performance Modeling for Human-Machine Collaborative Systems\"", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
                           loading1 == true ? CircularProgressIndicator() : Container(),
                         ],
                       ),
@@ -125,7 +126,7 @@ class _InputPageState extends State<InputPage> {
                   padding: const EdgeInsets.all(25.0),
                   child: GestureDetector(
                     onTap: (){
-                      handleTranslation(1);
+                      handleTranslation(2);
                     },
                     child: Container(
                       height: 60,
@@ -135,7 +136,7 @@ class _InputPageState extends State<InputPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("2. \"Cells, Generators, and Lenses: Design Framework for Object-Oriented Interaction with Large Language Models\"", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),),
+                          Text("2. \"Cells, Generators, and Lenses: Design Framework for Object-Oriented Interaction with Large Language Models\"", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
                           loading2 == true ? CircularProgressIndicator() : Container(),
                         ],
                       ),
@@ -146,13 +147,13 @@ class _InputPageState extends State<InputPage> {
                   padding: const EdgeInsets.all(25.0),
                   child: GestureDetector(
                     onTap: (){
-                      handleTranslation(1);
+                      handleTranslation(3);
                     },
                     child: Container(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("3. \"Selecting Distant Objects in VR Through a Mobile Device\"", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),),
+                          Text("3. \"Selecting Distant Objects in VR Through a Mobile Device\"", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
                           loading3 == true ? CircularProgressIndicator() : Container(),
                         ],
                       ),

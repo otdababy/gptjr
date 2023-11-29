@@ -40,6 +40,8 @@ class _ResultPageState extends State<ResultPage> {
   final List<InlineSpan> _textSpans = [];
   late String ogtext;
   late String showogtext;
+  bool loading = false;
+
 
   @override
   void initState() {
@@ -63,8 +65,9 @@ class _ResultPageState extends State<ResultPage> {
       print(word);
       _textSpans.add(
         TextSpan(
-          text: word + ' ',
+          text: word,
           style: TextStyle(
+            fontSize: 14,
             color: Colors.black,
             // decoration: TextDecoration.underline,
             // Add any other styles you need here
@@ -90,9 +93,22 @@ class _ResultPageState extends State<ResultPage> {
         //Get 성공
         // print(body);
         String suggestion = body['ngram'];
-        print("suggestion is ... $suggestion");
+        print("\n\nsuggestion is ... $suggestion\n\n");
         if(ogtext.contains(suggestion)){
-          await showDialog(
+          if(!_result['replacements'].containsKey(suggestion)){
+                                      print("hellloooo");
+                                      await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          //ask score system api
+                                          return PopupE(
+                                            title:
+                                                "There was an error. Please try again later.",
+                                          );
+                                        });
+                                    }
+          else{
+            await showDialog(
             context: context,
             builder: (BuildContext context) {
               //ask score system api
@@ -133,8 +149,9 @@ class _ResultPageState extends State<ResultPage> {
                       backgroundColor: Colors.black,
                     ),
                     onPressed: () {
+                      Navigator.pop(context);
                     },
-                    child: Text('View Original Text', style: TextStyle(fontFamily: 'SnowCrab',
+                    child: Text("No", style: TextStyle(fontFamily: 'SnowCrab',
                         fontWeight: FontWeight.w500,
                         fontSize: (12),
                         color: Colors.white),)
@@ -150,7 +167,7 @@ class _ResultPageState extends State<ResultPage> {
                 backgroundColor: Colors.black,
               ),
               onPressed: () async {
-                Navigator.pop(context);
+                // Navigator.pop(context);
                 await showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -190,11 +207,23 @@ class _ResultPageState extends State<ResultPage> {
                                       borderRadius: BorderRadius.circular(15)),
                                   backgroundColor: Colors.black,
                                 ),
-                                onPressed: () {
-                                  setState((){
-                                    ogtext = ogtext.replaceAll(selectedWord, _result['replacements'][selectedWord][0]);
+                                onPressed: () async {
+                                  if(!_result['replacements'].containsKey(selectedWord)){
+                                      await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          //ask score system api
+                                          return PopupE(
+                                            title:
+                                                "There was an error. Please try again later.",
+                                          );
+                                        });
+                                    }
+                                    else{
+                                      setState((){
+                                    ogtext = ogtext.replaceAll(suggestion, _result['replacements'][suggestion][0]);
                                     print(ogtext);
-                                    _addPref(selectedWord, _result['replacements'][selectedWord][0]);
+                                    _addPref(selectedWord, _result['replacements'][suggestion][0]);
                                     // await PreferencePutApi.putPreference(_result['username'],selectedWord,_result['replacements'][selectedWord][0]);
                                     _generateTextSpans(ogtext);
                                     Widget a = Padding(
@@ -204,9 +233,9 @@ class _ResultPageState extends State<ResultPage> {
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
-                                              Text("Recommended replacement text of $selectedWord"),
+                                              Text("Preference was added:"),
                                               Container(height: 10,),
-                                              Text(_result['replacements'][selectedWord][0]),
+                                              Text("$suggestion -> ${_result['replacements'][suggestion][0]}"),
                                             ],
                                           )
                                       ),
@@ -215,9 +244,11 @@ class _ResultPageState extends State<ResultPage> {
                                     // Navigator.pop(context);
                                     
                                   });
+                                    }
+                                  
                                   Navigator.of(context).pop();
                                 },
-                                child: Text(_result['replacements'][selectedWord][0], style: TextStyle(fontFamily: 'SnowCrab',
+                                child: Text(_result['replacements'][suggestion][0], style: TextStyle(fontFamily: 'SnowCrab',
                                     fontWeight: FontWeight.w500,
                                     fontSize: (12),
                                     color: Colors.white),)
@@ -232,11 +263,24 @@ class _ResultPageState extends State<ResultPage> {
                                 borderRadius: BorderRadius.circular(15)),
                             backgroundColor: Colors.black,
                           ),
-                          onPressed: () {
-                            setState(() async {
-                              ogtext = ogtext.replaceAll(selectedWord, _result['replacements'][selectedWord][1]);
+                          onPressed: () async {
+                            if(!_result['replacements'].containsKey(selectedWord)){
+                                      await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          //ask score system api
+                                          return PopupE(
+                                            title:
+                                                "There was an error. Please try again later.",
+                                          );
+                                        });
+                                    }
+                                    else{
+                                      setState(() async {
+
+                              ogtext = ogtext.replaceAll(suggestion, _result['replacements'][suggestion][1]);
                               print(ogtext);
-                              _addPref(selectedWord, _result['replacements'][selectedWord][1]);
+                              _addPref(suggestion, _result['replacements'][suggestion][1]);
                               _generateTextSpans(ogtext);
                               Widget a = Padding(
                                 padding: const EdgeInsets.all(10.0),
@@ -245,9 +289,9 @@ class _ResultPageState extends State<ResultPage> {
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        Text("Recommended replacement text of $selectedWord"),
-                                        Container(height: 10,),
-                                        Text(_result['replacements'][selectedWord][1]),
+                                        Text("Preference was added:"),
+                                              Container(height: 10,),
+                                              Text("$suggestion -> ${_result['replacements'][suggestion][1]}"),
                                       ],
                                     )
                                 ),
@@ -255,6 +299,8 @@ class _ResultPageState extends State<ResultPage> {
                               _rec.add(a); 
                               // Navigator.pop(context);
                             });
+                                    }
+                            
                             // Navigator.of(context).pop();
                           },
                           child: Text(_result['replacements'][selectedWord][1], style: TextStyle(fontFamily: 'SnowCrab',
@@ -281,6 +327,8 @@ class _ResultPageState extends State<ResultPage> {
                 ],
               );
             });
+          }
+          
         }
           // _handleWordTap(suggestion);
       }
@@ -347,11 +395,25 @@ class _ResultPageState extends State<ResultPage> {
                           borderRadius: BorderRadius.circular(15)),
                       backgroundColor: Colors.black,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       print("selectedWord");
                       print(_result['matched']);
                       print(selectedWord);
                       print(_result['matched'][selectedWord]);
+                      if(!_result['matched'].containsKey(selectedWord)){
+                        await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            //ask score system api
+                            return PopupE(
+                              title:
+                                  "There was an error. Please try again later.",
+                            );
+                          });
+                                    Navigator.pop(context);
+
+                      }
+                        
                       setState((){
                         ogtext = ogtext.replaceAll(selectedWord, _result['matched'][selectedWord]);
                         // showogtext = _result['sourcetext'];
@@ -393,8 +455,27 @@ class _ResultPageState extends State<ResultPage> {
                 backgroundColor: Colors.black,
               ),
               onPressed: () async {
-                Navigator.pop(context);
-                await showDialog(
+                // Navigator.pop(context);
+                print("hiiii");
+                print(selectedWord);
+                                    print(_result['replacements']);
+                                    print(_result['replacements'].containsKey(selectedWord));
+                if(!_result['replacements'].containsKey(selectedWord)){
+                                      print("hellloooo");
+                                      await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          //ask score system api
+                                          return PopupE(
+                                            title:
+                                                "Sorry.\nWe could not find recommended replacement for this word.",
+                                          );
+                                        });Navigator.pop(context);
+                                    }
+                                    
+                else{
+                  
+                  await showDialog(
                   context: context,
                   builder: (BuildContext context) {
                             return AlertDialog(
@@ -434,8 +515,13 @@ class _ResultPageState extends State<ResultPage> {
                                   backgroundColor: Colors.black,
                                 ),
                                 onPressed: () {
-                                  setState((){
-                                    ogtext = ogtext.replaceAll(selectedWord, _result['replacements'][selectedWord][0]);
+                                  Navigator.pop(context);
+                                  setState(() async {
+                                    print("hiiii");
+                                    print(_result['replacements']);
+                                    // print(_result['replacements'][selectedWord]);
+                                    
+                                      ogtext = ogtext.replaceAll(selectedWord, _result['replacements'][selectedWord][0]);
                                     print(ogtext);
                                     _addPref(selectedWord, _result['replacements'][selectedWord][0]);
                                     // await PreferencePutApi.putPreference(_result['username'],selectedWord,_result['replacements'][selectedWord][0]);
@@ -447,18 +533,23 @@ class _ResultPageState extends State<ResultPage> {
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
-                                              Text("Recommended replacement text of $selectedWord"),
+                                              Text("Preference was added:"),
                                               Container(height: 10,),
-                                              Text(_result['replacements'][selectedWord][0]),
+                                              Text("$selectedWord -> ${_result['replacements'][selectedWord][0]}"),
                                             ],
                                           )
                                       ),
                                     );
                                     _rec.add(a); 
+                                    
+                                    
                                     Navigator.pop(context);
                                     
+                                    
                                   });
-                                  Navigator.of(context).pop();
+                                    Navigator.pop(context);
+
+                                  // Navigator.of(context).pop();
                                 },
                                 child: Text(_result['replacements'][selectedWord][0], style: TextStyle(fontFamily: 'SnowCrab',
                                     fontWeight: FontWeight.w500,
@@ -475,8 +566,26 @@ class _ResultPageState extends State<ResultPage> {
                                 borderRadius: BorderRadius.circular(15)),
                             backgroundColor: Colors.black,
                           ),
-                          onPressed: () {
-                            setState(() async {
+                          onPressed: () async {
+                            // print(_result['replacements'][selectedWord]);
+                                  Navigator.pop(context);
+
+                            if(!_result['replacements'].containsKey(selectedWord)){
+                                      await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          //ask score system api
+                                          return PopupE(
+                                            title:
+                                                "There was an error. Please try again later.",
+                                          );
+                                        });
+                                    Navigator.pop(context);
+
+                                    }
+                                    else {
+                                      setState(() async {
+                              
                               ogtext = ogtext.replaceAll(selectedWord, _result['replacements'][selectedWord][1]);
                               print(ogtext);
                               _addPref(selectedWord, _result['replacements'][selectedWord][1]);
@@ -488,9 +597,9 @@ class _ResultPageState extends State<ResultPage> {
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        Text("Recommended replacement text of $selectedWord"),
-                                        Container(height: 10,),
-                                        Text(_result['replacements'][selectedWord][1]),
+                                        Text("Preference was added:"),
+                                              Container(height: 10,),
+                                              Text("$selectedWord -> ${_result['replacements'][selectedWord][1]}"),
                                       ],
                                     )
                                 ),
@@ -498,6 +607,8 @@ class _ResultPageState extends State<ResultPage> {
                               _rec.add(a); 
                               Navigator.pop(context);
                             });
+                                    }
+                            
                             Navigator.of(context).pop();
                           },
                           child: Text(_result['replacements'][selectedWord][1], style: TextStyle(fontFamily: 'SnowCrab',
@@ -511,6 +622,8 @@ class _ResultPageState extends State<ResultPage> {
                     ),
                   ],
                 );});
+                }
+                
               },
               child: Text('Select Replacement Text', style: TextStyle(fontFamily: 'SnowCrab',
                   fontWeight: FontWeight.w500,
@@ -528,6 +641,9 @@ class _ResultPageState extends State<ResultPage> {
 
   void handleTranslation(int p) async {
       //GET request
+      setState(() {
+      loading = true;
+      });
       try{
         var a = await TranslationGetApi.getTranslation(_result['username'], _t, p);
         final body = json.decode(a.body.toString());
@@ -535,7 +651,7 @@ class _ResultPageState extends State<ResultPage> {
         // final result = body['result'];
         //Get 성공
         print(body);
-        
+        loading = false;
         Navigator.push(context, MaterialPageRoute(
         builder: (_) => ResultPage(body, _t, p)));
       }
@@ -565,6 +681,7 @@ class _ResultPageState extends State<ResultPage> {
           TextSpan(
             text: word + ' ',
             style: TextStyle(
+              fontSize: 14,
               fontWeight: FontWeight.bold, // You can change the style as needed
               color: Colors.blue, // You can change the color as needed
             ),
@@ -639,11 +756,14 @@ class _ResultPageState extends State<ResultPage> {
                                       const Text(
                                         "Result",
                                       ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          // Handle Summarize button press
-                                        },
-                                        child: Text("Summarize"),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            // Handle Summarize button press
+                                          },
+                                          child: Text("Summarize"),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -669,7 +789,7 @@ class _ResultPageState extends State<ResultPage> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(right: 8.0),
+                                            padding: const EdgeInsets.only(right: 10.0),
                                             child: Expanded(
                                               child: Text.rich(item),
                                             ),
@@ -691,15 +811,18 @@ class _ResultPageState extends State<ResultPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Container(
-                          height: 200,
-                          margin: const EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: highlightWord(showogtext, showogword),
+                        child: Padding(
+                          padding: const EdgeInsets.all(30.0),
+                          child: Container(
+                            height: 150,
+                            // margin: const EdgeInsets.all(20.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: highlightWord(showogtext, showogword),
+                            ),
                           ),
                         ),
                       ),
@@ -717,17 +840,27 @@ class _ResultPageState extends State<ResultPage> {
               child: Column(
                 children: [
                   Container(height: 30,),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Handle Summarize button press
-                      if(_p == 7){
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (_) => EndPage(_result['username'])));
-                      }
-                      else
-                        handleTranslation(_p+1);
-                    },
-                    child: Text("Next paragraph"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Handle Summarize button press
+                          if(_p == 6){
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (_) => EndPage(_result['username'])));
+                          }
+                          else
+                            handleTranslation(_p+1);
+                        },
+                        child: Text("Next paragraph"),
+                      ),
+                      loading == true ? Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Container(width:10 , height: 10,child: CircularProgressIndicator()),
+                      ) : Container(),
+                    ],
                   ),
                   Container(height: 20,),
                   Row(
