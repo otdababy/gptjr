@@ -55,9 +55,9 @@ class _EndPageState extends State<EndPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text("Thank you for your participation $_name."),
-                Container(height: 10,),
+                Container(height: 50,),
                 Text("We will remember your customized preferences, so when you visit GPT Jr. again, your preferences will be automatically applied"),
-                Container(height: 20,),
+                Container(height: 50,),
                 Text("If you have any questions, please contact us at jchaemin@kaist.ac.kr"),
 
                 
