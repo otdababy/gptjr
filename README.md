@@ -30,9 +30,6 @@ You can also get a suggestion for a similar replacement from the system based on
 2. Click the recommended word if you want to replace further.    
 <br><br>
 
-<img src="./text_selection.png" width="1000px" height="180px"></img>  
-<img src="./origin_text.png" width="1000px" height="180px"></img>  
-<img src="./replacement.png" width="1000px" height="600px"></img>
 
 
 ## Implementation Notes
