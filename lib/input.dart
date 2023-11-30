@@ -143,23 +143,23 @@ class _InputPageState extends State<InputPage> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(25.0),
-                  child: GestureDetector(
-                    onTap: (){
-                      handleTranslation(3);
-                    },
-                    child: Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("3. \"Selecting Distant Objects in VR Through a Mobile Device\"", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
-                          loading3 == true ? CircularProgressIndicator() : Container(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.all(25.0),
+                //   child: GestureDetector(
+                //     onTap: (){
+                //       handleTranslation(3);
+                //     },
+                //     child: Container(
+                //       child: Row(
+                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //         children: [
+                //           Text("3. \"Selecting Distant Objects in VR Through a Mobile Device\"", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),),
+                //           loading3 == true ? CircularProgressIndicator() : Container(),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 
               ],
             )

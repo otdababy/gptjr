@@ -41,6 +41,7 @@ class _ResultPageState extends State<ResultPage> {
   late String ogtext;
   late String showogtext;
   bool loading = false;
+  bool reploading = false;
 
 
   @override
@@ -95,8 +96,8 @@ class _ResultPageState extends State<ResultPage> {
         String suggestion = body['ngram'];
         print("\n\nsuggestion is ... $suggestion\n\n");
         if(ogtext.contains(suggestion)){
+          reploading = true;
           if(!_result['replacements'].containsKey(suggestion)){
-                                      print("hellloooo");
                                       await showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
@@ -106,6 +107,7 @@ class _ResultPageState extends State<ResultPage> {
                                                 "There was an error. Please try again later.",
                                           );
                                         });
+                                        reploading = false;
                                     }
           else{
             await showDialog(
@@ -223,7 +225,7 @@ class _ResultPageState extends State<ResultPage> {
                                       setState((){
                                     ogtext = ogtext.replaceAll(suggestion, _result['replacements'][suggestion][0]);
                                     print(ogtext);
-                                    _addPref(selectedWord, _result['replacements'][suggestion][0]);
+                                    // _addPref(selectedWord, _result['replacements'][suggestion][0]);
                                     // await PreferencePutApi.putPreference(_result['username'],selectedWord,_result['replacements'][selectedWord][0]);
                                     _generateTextSpans(ogtext);
                                     Widget a = Padding(
@@ -246,7 +248,7 @@ class _ResultPageState extends State<ResultPage> {
                                   });
                                     }
                                   
-                                  Navigator.of(context).pop();
+                                  // Navigator.of(context).pop();
                                 },
                                 child: Text(_result['replacements'][suggestion][0], style: TextStyle(fontFamily: 'SnowCrab',
                                     fontWeight: FontWeight.w500,
@@ -280,7 +282,7 @@ class _ResultPageState extends State<ResultPage> {
 
                               ogtext = ogtext.replaceAll(suggestion, _result['replacements'][suggestion][1]);
                               print(ogtext);
-                              _addPref(suggestion, _result['replacements'][suggestion][1]);
+                              // _addPref(suggestion, _result['replacements'][suggestion][1]);
                               _generateTextSpans(ogtext);
                               Widget a = Padding(
                                 padding: const EdgeInsets.all(10.0),
@@ -326,10 +328,11 @@ class _ResultPageState extends State<ResultPage> {
         ),
                 ],
               );
-            });
+            }); reploading = false;
           }
           
         }
+        Navigator.pop(context);
           // _handleWordTap(suggestion);
       }
       catch(e) {
@@ -435,7 +438,7 @@ class _ResultPageState extends State<ResultPage> {
                           ),
                         );
                         _rec.add(a); 
-                        _addPref(selectedWord, _result['matched'][selectedWord]);
+                        // _addPref(selectedWord, _result['matched'][selectedWord]);
                         Navigator.pop(context);
                       });
                     },
@@ -486,15 +489,22 @@ class _ResultPageState extends State<ResultPage> {
                     child: Padding(
                       padding: EdgeInsets.only(top: (25.0)),
                       child: Center(
-                        child: Text(
-                          "Choose your replacement word",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'SnowCrab',
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Choose your replacement word",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'SnowCrab',
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500
+                              ),
+                            ),
+                          reploading == true ? Container(width: 20, height: 20, child: CircularProgressIndicator()) : Container(),
+
+                          ],
                         ),
                       ),
                     ),
@@ -517,7 +527,6 @@ class _ResultPageState extends State<ResultPage> {
                                 onPressed: () {
                                   Navigator.pop(context);
                                   setState(() async {
-                                    print("hiiii");
                                     print(_result['replacements']);
                                     // print(_result['replacements'][selectedWord]);
                                     
@@ -543,13 +552,11 @@ class _ResultPageState extends State<ResultPage> {
                                     _rec.add(a); 
                                     
                                     
-                                    Navigator.pop(context);
+                                    // Navigator.pop(context);
                                     
                                     
                                   });
-                                    Navigator.pop(context);
-
-                                  // Navigator.of(context).pop();
+                                    // Navigator.pop(context);
                                 },
                                 child: Text(_result['replacements'][selectedWord][0], style: TextStyle(fontFamily: 'SnowCrab',
                                     fontWeight: FontWeight.w500,
@@ -605,11 +612,11 @@ class _ResultPageState extends State<ResultPage> {
                                 ),
                               );
                               _rec.add(a); 
-                              Navigator.pop(context);
+                              // Navigator.pop(context);
                             });
                                     }
                             
-                            Navigator.of(context).pop();
+                            // Navigator.of(context).pop();
                           },
                           child: Text(_result['replacements'][selectedWord][1], style: TextStyle(fontFamily: 'SnowCrab',
                               fontWeight: FontWeight.w500,
@@ -759,8 +766,17 @@ class _ResultPageState extends State<ResultPage> {
                                       Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                                         child: ElevatedButton(
-                                          onPressed: () {
+                                          onPressed: () async {
                                             // Handle Summarize button press
+                                            await showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                //ask score system api
+                                                return PopupE(
+                                                  title:
+                                                      "Please try again at a later time.",
+                                                );
+                                              });
                                           },
                                           child: Text("Summarize"),
                                         ),
